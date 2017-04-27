@@ -19,14 +19,14 @@ LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=35c0ab29d291dbbd14d66fd95521237f"
 SRC_URI = " \
     git://github.com/WindRiver-OpenSourceLabs/cryptfs-tpm2.git \
 "
-SRCREV = "4e0faede2eb113650e666bcbf4035d2d7ae5388d"
-PV = "0.5.1+git${SRCPV}"
+SRCREV = "ad289d0d40f25a5decdcfe2ef7679a432d303b10"
+PV = "0.5.2+git${SRCPV}"
 
 DEPENDS += "tpm2.0-tss"
 RDEPENDS_${PN} += "libtss2 libtctisocket tpm2.0-tools"
 
 PACKAGES =+ " \
-    ${PN}-initramfs-script \
+    ${PN}-initramfs \
 "
 
 PARALLEL_MAKE = ""
@@ -53,8 +53,9 @@ do_install() {
     fi
 }
 
-FILES_${PN}-initramfs-script = "\
+FILES_${PN}-initramfs = "\
     /init.cryptfs \
+    ${sbindir}/tcti-probe \
 "
 
 FILES_${PN} = "\
