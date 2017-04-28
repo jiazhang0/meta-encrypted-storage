@@ -19,7 +19,7 @@ LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=35c0ab29d291dbbd14d66fd95521237f"
 SRC_URI = " \
     git://github.com/WindRiver-OpenSourceLabs/cryptfs-tpm2.git \
 "
-SRCREV = "0596b4468815b306fe4aed418d2a867681e2992b"
+SRCREV = "37989e72e2931f53c55a2e63c38f3beeebcc2ff9"
 PV = "0.5.2+git${SRCPV}"
 
 DEPENDS += "tpm2.0-tss"
@@ -55,10 +55,10 @@ do_install() {
 
 FILES_${PN}-initramfs = "\
     /init.cryptfs \
-    ${sbindir}/tcti-probe \
 "
 
 FILES_${PN} = "\
     ${sbindir} \
     ${libdir} \
+    ${sbindir}/tcti-probe \
 "
