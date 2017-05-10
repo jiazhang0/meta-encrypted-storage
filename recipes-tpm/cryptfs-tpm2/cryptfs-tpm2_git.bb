@@ -23,7 +23,7 @@ SRCREV = "8e8814afa11b3f4cbe0b7e27b64ece3efe014188"
 PV = "0.6.0+git${SRCPV}"
 
 DEPENDS += "tpm2.0-tss"
-RDEPENDS_${PN} += "libtss2 libtctisocket tpm2.0-tools"
+RDEPENDS_${PN} += "libtss2 libtctidevice libtctisocket"
 
 PACKAGES =+ " \
     ${PN}-initramfs \

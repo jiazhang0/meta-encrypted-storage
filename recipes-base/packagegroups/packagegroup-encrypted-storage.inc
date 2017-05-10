@@ -22,9 +22,6 @@ RDEPENDS_${PN} = " \
     cryptsetup \
     kmod \
     coreutils \
-    libtss2 \
-    libtctidevice \
-    libtctisocket \
     resourcemgr \
     cryptfs-tpm2 \
 "
