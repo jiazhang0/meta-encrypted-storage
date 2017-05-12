@@ -19,11 +19,11 @@ LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=35c0ab29d291dbbd14d66fd95521237f"
 SRC_URI = " \
     git://github.com/WindRiver-OpenSourceLabs/cryptfs-tpm2.git \
 "
-SRCREV = "8e8814afa11b3f4cbe0b7e27b64ece3efe014188"
+SRCREV = "85591773d137b06da531239ab119f1d95e350035"
 PV = "0.6.0+git${SRCPV}"
 
-DEPENDS += "tpm2.0-tss"
-RDEPENDS_${PN} += "libtss2 libtctidevice libtctisocket"
+DEPENDS += "tpm2.0-tss tpm2-abrmd pkgconfig-native"
+RDEPENDS_${PN} += "libtss2 libtctidevice libtctisocket tpm2-abrmd"
 
 PACKAGES =+ " \
     ${PN}-initramfs \
@@ -34,13 +34,14 @@ PARALLEL_MAKE = ""
 S = "${WORKDIR}/git"
 
 EXTRA_OEMAKE = " \
-    prefix="${prefix}" \
     sbindir="${sbindir}" \
     libdir="${libdir}" \
     includedir="${includedir}" \
-    tpm2_tss_includedir="${STAGING_LIBDIR}" \
-    tpm2_tss_libdir="${STAGING_INCDIR}" \
+    tpm2_tss_includedir="${STAGING_INCDIR}" \
+    tpm2_tss_libdir="${STAGING_LIBDIR}" \
+    tpm2_tabrmd_includedir="${STAGING_INCDIR}" \
     CC="${CC}" \
+    PKG_CONFIG="${STAGING_BINDIR_NATIVE}/pkg-config" \
     EXTRA_CFLAGS="${CFLAGS}" \
     EXTRA_LDFLAGS="${LDFLAGS}" \
 "
@@ -55,10 +56,4 @@ do_install() {
 
 FILES_${PN}-initramfs = "\
     /init.cryptfs \
-"
-
-FILES_${PN} = "\
-    ${sbindir} \
-    ${libdir} \
-    ${sbindir}/tcti-probe \
 "

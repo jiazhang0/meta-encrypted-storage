@@ -22,7 +22,6 @@ RDEPENDS_${PN} = " \
     cryptsetup \
     kmod \
     coreutils \
-    resourcemgr \
     cryptfs-tpm2 \
 "
 
