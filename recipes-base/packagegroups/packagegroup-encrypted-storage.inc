@@ -26,4 +26,4 @@ RDEPENDS_${PN} = " \
     cryptfs-tpm2 \
 "
 
-RRECOMMENDS_${PN} = "kernel-module-tpm-tis"
+RRECOMMENDS_${PN} = "kernel-module-tpm-tis kernel-module-tpm-crb"
