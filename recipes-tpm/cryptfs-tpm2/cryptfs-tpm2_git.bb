@@ -14,12 +14,12 @@ persistent in TPM. \
 "
 SECTION = "devel"
 LICENSE = "BSD"
-LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=35c0ab29d291dbbd14d66fd95521237f"
+LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=89c8ce1346a3dfe75379e84f3ba9d641"
 
 SRC_URI = " \
     git://github.com/WindRiver-OpenSourceLabs/cryptfs-tpm2.git \
 "
-SRCREV = "85591773d137b06da531239ab119f1d95e350035"
+SRCREV = "16f8eccc06140969ce3031dba14fd8aaea015a6c"
 PV = "0.6.0+git${SRCPV}"
 
 DEPENDS += "tpm2.0-tss tpm2-abrmd pkgconfig-native"
