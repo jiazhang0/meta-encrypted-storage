@@ -19,11 +19,11 @@ LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=89c8ce1346a3dfe75379e84f3ba9d641"
 SRC_URI = " \
     git://github.com/WindRiver-OpenSourceLabs/cryptfs-tpm2.git \
 "
-SRCREV = "16f8eccc06140969ce3031dba14fd8aaea015a6c"
+SRCREV = "e39abe57c9432789de9ac118666b95ddf7996f00"
 PV = "0.6.0+git${SRCPV}"
 
 DEPENDS += "tpm2.0-tss tpm2-abrmd pkgconfig-native"
-RDEPENDS_${PN} += "libtss2 libtctidevice libtctisocket tpm2-abrmd"
+RDEPENDS_${PN} += "libtss2 libtctidevice libtctisocket"
 
 PACKAGES =+ " \
     ${PN}-initramfs \
