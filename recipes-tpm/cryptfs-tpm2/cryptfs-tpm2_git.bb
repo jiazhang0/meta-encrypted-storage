@@ -49,7 +49,7 @@ EXTRA_OEMAKE = " \
 do_install() {
     oe_runmake install DESTDIR="${D}"
 
-    if [ x"${@bb.utils.contains('DISTRO_FEATURES', 'storage-encryption', '1', '0', d)}" = x"1" ]; then
+    if [ x"${@bb.utils.contains('DISTRO_FEATURES', 'encrypted-storage', '1', '0', d)}" = x"1" ]; then
         install -m 0500 ${S}/script/init.cryptfs ${D}
     fi
 }
