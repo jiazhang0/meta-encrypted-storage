@@ -8,6 +8,8 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 
 ALLOW_EMPTY_${PN} = "1"
 
+S = "${WORKDIR}"
+
 # Install the minimal stuffs for the common uses between initramfs
 # and linux rootfs.
 # @util-linux: mount, umount
