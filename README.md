@@ -1,6 +1,4 @@
-Storage Encryption
-==================
-
+### Storage Encryption
 This feature provides secure storage for application data. Some applications
 need secure storage for sensitive data which must not be accessible to another
 device. For example, only an application with the right signature can update
@@ -23,102 +21,86 @@ Due to the use of TPM state to seal the passphrase used to encrypt the storage,
 the encrypted storage cannot be accessed on another machine, preventing from
 the so-called offline attack.
 
-Build
-=====
-
-In order to enable this feature, add the path to
-feature/encrypted-storage/template.conf to the init script.
-
-Dependency
-==========
-
-This feature depends on feature/tpm2.
+### Dependency
+This feature depends on meta-tpm2.
 
 Note:
 Even though the hardware doesn't have a TPM 2.0 device, this feature can still
 run on it, although without the guarantee of compromise detection.
 
-Limit
-=====
-
+### Limit
 - TPM 2.0 is validated and officially supported. But TPM 1.2 device is not
   supported by this feature.
 
-Data Volume Encryption
-======================
-
-Use case 1: manual operation
-----------------------------
-
-Create the LUKS partition
-~~~~~~~~~~~~~~~~~~~~~~~~~
+### Data Volume Encryption
+#### Use case 1: manual operation
+##### Create the LUKS partition
+```
 # cryptsetup --type luks --cipher aes-xts-plain --hash sha256 \
       --use-random luksFormat /dev/$dev
-
+```
 where $dev is the device node of the partition to be encrypted.
 
 This command initializes a LUKS partition and prompts to input an initial
 passphrase used to encrypt the data. Don't disclose the passphrase used for
 product.
 
-Open the LUKS partition
-~~~~~~~~~~~~~~~~~~~~~~~
+##### Open the LUKS partition
+```
 # cryptsetup luksOpen /dev/$dev $name
-
+```
 This command opens the LUKS device $dev and sets up a mapping $name after
 successful verification of the supplied passphrase typed interactively. From
 now on, the data written to /dev/mapper/$name is encrypted and the data
 read back from /dev/mapper/$name is decrypted transparently and automatically.
 
-Create the filesystem on top of the LUKS partition
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##### Create the filesystem on top of the LUKS partition
 The user can run any available filesytem formatting program on
 /dev/mapper/$name to create the filesytem with the data encryption.
 
-Close the LUKS partition
-~~~~~~~~~~~~~~~~~~~~~~~~
+##### Close the LUKS partition
+```
 # cryptsetup luksClose $name
-
+```
 This command removes the existing mapping $name and wipes the key from kernel
 memory.
 
 To access the encryped partition, follow the instruction "Open the LUKS partition"
 and then manually mount /dev/mapper/$name to a mount point.
 
-Use case 2: luks-setup.sh
--------------------------
+#### Use case 2: luks-setup.sh
 This script provides a semi automatic method to set up LUKS partition. The user
 still needs to manually create the filesystem on top of the newly created LUKS
 partition.
 
-LUKS partition creation
-~~~~~~~~~~~~~~~~~~~~~~~
+##### LUKS partition creation
 In runtime, for example, create LUKS partition on /dev/sdb1 with the
 name "my_luks_part":
+```
 # luks-setup.sh -d /dev/sdb1 -n my_luks_name -e
-
+```
 Note: if TPM is detected, the passphrase will be generated automatically.
 
 For more uses about luks-setup.sh, run it with -h option.
 
-Retrieve the passphrase
-~~~~~~~~~~~~~~~~~~~~~~~
+##### Retrieve the passphrase
+```
 # cryptfs-tpm2 -q unseal passphrase -P sha1 -o /tmp/passphrase
-
+```
 This command will unseal the passphrase from TPM device and save the content
 of passphrase to the file /tmp/passphrase.
 
 The passphrase should not be disclosed and needs to be backed up to a off-line
 storage.
 
-Open the LUKS partition
-~~~~~~~~~~~~~~~~~~~~~~~
+##### Open the LUKS partition
+```
 # cryptsetup luksOpen --key-file /tmp/passphrase /dev/$dev $name
-
-Mount the LUKS partition
-~~~~~~~~~~~~~~~~~~~~~~~~
+```
+##### Mount the LUKS partition
+```
 # mount /dev/mapper/$name $mount_point
-
+```
 The remaining operations are left to the user. Don't forget to close the LUKS
 partition if not used.
 
@@ -129,9 +111,7 @@ passphrase doesn't match up the value when creating the passphrase, the
 passphrase cannot be unsealed. The value of PCR 7 is usually affected by the
 status of UEFI secure boot.
 
-Root Filesystem Encryption
-==========================
-
+### Root Filesystem Encryption
 This enables the data encryption on the rootfs without the need of a human
 entering an user passphrase. Therefore, it is required to employ an initramfs
 where the unique identity from the platform is collected from the devices on
@@ -140,8 +120,7 @@ TPM to protect the user passphrase for volume decryption to avoid disclosing
 the user passphrase. If the TPM device is not detected, the end user will be
 prompted to type the user passphrase.
 
-Operations
-----------
+#### Operations
 Note:
 The instructions below with the prefix "[TPM]" indicate the operation
 requires TPM device. Oppositely, the prefix "[Non-TPM]" indicates this
@@ -159,7 +138,7 @@ operation is required if the target board doesn't have a TPM device.
 - Power on
 
 - [TPM] Clear TPM
-  Refer to feature/tpm2/README for the details.
+  Refer to meta-tpm2/README.md for the details.
 
 - Boot to Linux
 
@@ -173,9 +152,7 @@ operation is required if the target board doesn't have a TPM device.
   After reboot to initramfs, it employs a init script to transparently
   unseal the passphrase and mount the rootfs without any interaction.
 
-Best Practice
-=============
-
+### Best Practice
 - The benefit of anchoring the TPM is that the machine status cannot be
   compromised by any attack. If compromised, the system cannot boot up
   due to the failure when mouting the rootfs, or access the encrypted partition
@@ -191,11 +168,12 @@ Best Practice
   is user configurable. Modify the values of CRYPTFS_TPM2_PRIMARY_KEY_SECRET
   and CRYPTFS_TPM2_PASSPHRASE_SECRET in cryptfs-tpm2 with your preference.
 
-Known Issues
-============
-
+### Known Issues
 - The default IMA rules provides the ability of measuring the boot components
   and calculating the aggregate integrity value for attesting. However, this
   function conflicts with this feature which employs PCR policy session to
   retrieve the passphrase in a safe way. If the installer enables both of
   them, the default IMA rules will be not used.
+
+### Reference
+- [OpenEmbedded layer for TPM 2.0 enablement](https://github.com/jiazhang0/meta-tpm2)
