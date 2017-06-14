@@ -11,11 +11,8 @@ DESCRIPTION = "The packages used for encrypted storage."
 # are listed in the .inc.
 # @util-linux: fdisk
 # @parted: parted
-# @rng-tools: rngd
 RDEPENDS_${PN} += " \
     util-linux-fdisk \
     parted \
-    rng-tools \
+    packagegroup-tpm2 \
 "
-
-RRECOMMENDS_${PN} += "kernel-module-tpm-rng"

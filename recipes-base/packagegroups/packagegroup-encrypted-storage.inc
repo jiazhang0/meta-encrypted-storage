@@ -27,5 +27,3 @@ RDEPENDS_${PN} = " \
     cryptfs-tpm2 \
     procps \
 "
-
-RRECOMMENDS_${PN} = "kernel-module-tpm-tis kernel-module-tpm-crb"
