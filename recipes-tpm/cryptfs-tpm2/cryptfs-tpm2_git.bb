@@ -13,7 +13,7 @@ context file, the created passphrase and primary key are always \
 persistent in TPM. \
 "
 SECTION = "devel"
-LICENSE = "BSD"
+LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=89c8ce1346a3dfe75379e84f3ba9d641"
 
 SRC_URI = " \
