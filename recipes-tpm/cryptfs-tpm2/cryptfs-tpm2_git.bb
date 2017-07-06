@@ -28,6 +28,15 @@ RDEPENDS_${PN} += "libtss2 libtctidevice libtctisocket"
 PACKAGES =+ " \
     ${PN}-initramfs \
 "
+# Install required stuffs for init.cryptfs:
+# @bash: bash
+# @util-linux-blkid: blkid
+# @coreutils: sleep
+# @sed: sed
+# @grep: grep
+# @gawk: awk
+# @procps: pkill
+RDEPENDS_${PN}-initramfs-script += "bash util-linux-blkid coreutils sed grep gawk procps"
 
 PARALLEL_MAKE = ""
 

@@ -77,7 +77,7 @@ partition.
 In runtime, for example, create LUKS partition on /dev/sdb1 with the
 name "my_luks_part":
 ```
-# luks-setup.sh -d /dev/sdb1 -n my_luks_name -e
+# luks-setup.sh -d /dev/sdb1 -n my_luks_part -e
 ```
 Note: if TPM is detected, the passphrase will be generated automatically.
 
@@ -129,24 +129,25 @@ operation is required if the target board doesn't have a TPM device.
 - Ensure a hard drive is attached on target board
   WARNNING: the following instructions will wipe all data in the hard drive.
 
-- Create overc installer on a USB device
-  Refer to layers/meta-overc/README.install for the details about how to
-  run cubeit to install overc installer to a USB device.
+- Create bootable USB device
+  Refer to layers/meta-secure-env/README.install for the details about how to
+  create a bootable USB device.
 
 - Attach the USB device to the board
 
 - Power on
 
 - [TPM] Clear TPM
-  Refer to meta-tpm2/README.md for the details.
+  Clear and enable TPM from the BIOS or set the security jumper on the board.
 
 - Boot to Linux
 
-- Install overc runtime on the hard drive
-  Refer to layers/meta-overc/README.install for the details about how to
-  run cubeit-installer to install overc runtime to a hard drive. In
-  addition, beware of specifying "--encrypt" option to set up an
-  encrypted rootfs.
+- Install rootfs on the hard drive
+  Refer to layers/meta-secure-env/README.install for the details about how to
+  install rootfs to a hard drive.
+
+- Create LUKS partition
+  Refer to the section: "Use case 2: luks-setup.sh"
 
 - Reboot
   After reboot to initramfs, it employs a init script to transparently
