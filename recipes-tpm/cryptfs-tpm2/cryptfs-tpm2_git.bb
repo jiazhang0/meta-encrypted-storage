@@ -1,10 +1,6 @@
-#
-# Copyright (C) 2016-2017 Wind River Systems, Inc.
-#
-
 SUMMARY = "A tool used to create, persist, evict a passphrase \
 for full-disk-encryption with TPM 2.0"
-DESCRIPTION = " \
+DESCRIPTION = "\
 This project provides with an implementation for \
 creating, persisting and evicting a passphrase with TPM 2.0. \
 The passphrase and its associated primary key are automatically \
@@ -16,33 +12,18 @@ SECTION = "devel"
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=89c8ce1346a3dfe75379e84f3ba9d641"
 
-SRC_URI = " \
-    git://github.com/WindRiver-OpenSourceLabs/cryptfs-tpm2.git \
-"
-SRCREV = "5ee0580eb94dc9cb6629b6b5e6de0a3a2eef2b64"
+DEPENDS += "tpm2.0-tss tpm2-abrmd pkgconfig-native"
+
 PV = "0.6.0+git${SRCPV}"
 
-DEPENDS += "tpm2.0-tss tpm2-abrmd pkgconfig-native"
-RDEPENDS_${PN} += "libtss2 libtctidevice libtctisocket"
-
-PACKAGES =+ " \
-    ${PN}-initramfs \
+SRC_URI = "\
+    git://github.com/WindRiver-OpenSourceLabs/cryptfs-tpm2.git \
 "
-# Install required stuffs for init.cryptfs:
-# @bash: bash
-# @util-linux-blkid: blkid
-# @coreutils: sleep
-# @sed: sed
-# @grep: grep
-# @gawk: awk
-# @procps: pkill
-RDEPENDS_${PN}-initramfs-script += "bash util-linux-blkid coreutils sed grep gawk procps"
-
-PARALLEL_MAKE = ""
+SRCREV = "4f6a7a34cb7b0c0afd6c5f96c3de5b677a256cc5"
 
 S = "${WORKDIR}/git"
 
-EXTRA_OEMAKE = " \
+EXTRA_OEMAKE = "\
     sbindir="${sbindir}" \
     libdir="${libdir}" \
     includedir="${includedir}" \
@@ -55,14 +36,77 @@ EXTRA_OEMAKE = " \
     EXTRA_LDFLAGS="${LDFLAGS}" \
 "
 
+PARALLEL_MAKE = ""
+
 do_install() {
     oe_runmake install DESTDIR="${D}"
 
-    if [ x"${@bb.utils.contains('DISTRO_FEATURES', 'encrypted-storage', '1', '0', d)}" = x"1" ]; then
-        install -m 0500 ${S}/script/init.cryptfs ${D}
+    if [ "${@bb.utils.contains('DISTRO_FEATURES', 'encrypted-storage', '1', '0', d)}" = "1" ]; then
+        install -m 0500 "${S}/scripts/init.cryptfs" "${D}"
     fi
 }
 
+PACKAGES =+ "\
+    ${PN}-initramfs \
+"
+
 FILES_${PN}-initramfs = "\
     /init.cryptfs \
+"
+
+# Install the minimal stuffs only, and don't care how the external
+# environment is configured.
+
+# For luks-setup.sh
+# @bash: bash
+# @coreutils: echo, printf, cat, rm
+# @grep: grep
+# @procps: pkill, pgrep
+# @cryptsetup: cryptsetup
+# @tpm2.0-tools: tpm2_*
+# @tpm2-abrmd: optional
+RDEPENDS_${PN} += "\
+    libtss2 \
+    libtctidevice \
+    libtctisocket \
+    bash \
+    coreutils \
+    grep \
+    procps \
+    cryptsetup \
+"
+
+RDEPENDS_${PN} = "\
+    tpm2.0-tools \
+"
+
+# For init.cryptfs
+# @bash: bash
+# @coreutils: echo, printf, cat, sleep, mkdir, seq, rm, rmdir, mknod, cut
+# @grep: grep
+# @gawk: awk
+# @sed: sed
+# @kmod: depmod, modprobe
+# @cryptsetup: cryptsetup
+# @cryptfs-tpm2: cryptfs-tpm2
+# @net-tools: ifconfig
+# @util-linux: mount, umount, blkid
+RDEPENDS_${PN}-initramfs = "\
+    bash \
+    coreutils \
+    grep \
+    gawk \
+    sed \
+    kmod \
+    cryptsetup \
+    cryptfs-tpm2 \
+    net-tools \
+    util-linux-mount \
+    util-linux-umount \
+    util-linux-blkid \
+"
+
+RRECOMMENDS_${PN}-initramfs = "\
+    kernel-module-tpm-crb \
+    kernel-module-tpm-tis \
 "
